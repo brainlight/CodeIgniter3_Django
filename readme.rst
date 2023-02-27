@@ -12,7 +12,7 @@ How to use
 
 - Add sample data
 - Add models> All_model.php
-```php
+```
 <?php
     class All_model extends MY_Django_Model 
     {
@@ -41,7 +41,7 @@ How to use
 ```
 
 - Modify in controllers> Welcome>index()
-```php
+```
 $this->load->model('all_model');
 $obj_catagory = new Catagory_model();
 $cats = $obj_catagory->filter(array("cat_id"=>null))->all();
