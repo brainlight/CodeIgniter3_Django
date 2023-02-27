@@ -108,5 +108,13 @@ $obj_catagory->filter(array("cat_id"=>null))->order_by(array("name"=>"asc", "id"
 
 - Filter children_set
 - Filter connect_set
+- get default value
+- Extra select
+- set
+- update
+- delete
+- group_by
+- count_all_results
+- get() = filter()
 
 

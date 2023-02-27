@@ -133,7 +133,7 @@ class MY_Django_Model extends CI_Model{
         return $this->join_tables;
     }
 
-    public function set_conn_id($value)
+    private function set_conn_id($value)
     {
         $this->conn_id = $value;
     }
@@ -143,7 +143,7 @@ class MY_Django_Model extends CI_Model{
         return $this->conn_id;
     }
 
-    public function set_child_id($value)
+    private function set_child_id($value)
     {
         $this->child_id = $value;
     }
@@ -239,7 +239,7 @@ class MY_Django_Model extends CI_Model{
         return $this;
     }
 
-    public function filter_like($key, $array_values, $advance_search, $and=true)
+    private function filter_like($key, $array_values, $advance_search, $and=true)
     {
         $cond = "";
         if ($advance_search =="icontain" || $advance_search =="notIcontain" )
