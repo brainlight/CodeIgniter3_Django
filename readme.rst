@@ -12,7 +12,7 @@ How to use
 
 - Add sample data
 - Add models> All_model.php
-
+{
 <?php
     class All_model extends MY_Django_Model 
     {
@@ -38,7 +38,7 @@ How to use
         }
     }
 ?>
-
+}
 - Modify in controllers> Welcome>index()
 
 $this->load->model('all_model');
