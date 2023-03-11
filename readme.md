@@ -1,10 +1,11 @@
-###################
+*******************
 Author: hoanglongbkit@gmail.com
 Description: add some features of django filter to Codeignitor
-###################
+*******************
 
+*******************
 What is CodeIgniter & Django filter function
-###################
+*******************
 
 CodeIgniter with Django filter function is very convenience for query data.
 This function is not fully working same with real Django filter, or not support Q query of Django.
