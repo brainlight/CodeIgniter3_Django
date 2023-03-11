@@ -15,8 +15,14 @@ This function is not fully working same with real Django filter, or not support 
 How to use
 *******************
 
-- Add sample data
-- Add models> All_model.php
+- 1. Add sample data: catagory.sql > connect to database> modify: application>config>database.php
+- 2. Define table names in: application>config>constants.php
+```
+$all_data_tables =[];
+$all_data_tables[] ="catagory";
+```
+
+- 3. Add application>models> All_model.php
 ```
 <?php
     class All_model extends MY_Django_Model 
@@ -45,7 +51,7 @@ How to use
 ?>
 ```
 
-- Modify in controllers> Welcome>index()
+- 4. Modify in application> controllers> Welcome>index()
 ```
 $this->load->model('all_model');
 $obj_catagory = new Catagory_model();
