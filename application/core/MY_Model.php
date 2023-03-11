@@ -227,7 +227,7 @@ class MY_Django_Model extends CI_Model{
             {
                 $this->query = $this->db->or_where_in($key, $array_values);
             }
-        }else if (is_string($array_values))
+        }else if (is_string($array_values) or is_numeric($array_values))
         {
             //in case of: array("name"=>"abc")
             if ($and)
