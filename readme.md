@@ -26,14 +26,14 @@ How to use
 
         public $id = null;
         public $name=null;
-        public $cat=null;
+        public $catagory_id=null;
 
         public function __construct()
         {
             parent::__construct();
             $this->set_table("catagory");
             $this->set_field_default("name");
-            $this->set_join_tables("catagory","cat_id");
+            $this->set_join_tables("catagory","catagory_id");
             $this->load->database();
         }
     }
@@ -44,7 +44,7 @@ How to use
 ```
 $this->load->model('all_model');
 $obj_catagory = new Catagory_model();
-$cats = $obj_catagory->filter(array("cat_id"=>null))->all();
+$cats = $obj_catagory->filter(array("catagory_id"=>null))->all();
 foreach ($cats as $cat)
 {
     echo "<br>".$cat->name;
@@ -56,12 +56,12 @@ Filter features
 **************************
 - Filter data and get all records
 ```
-$obj_catagory->filter(array("cat_id"=>null))->all(); 
+$obj_catagory->filter(array("catagory_id"=>null))->all(); 
 ```
 
 - Filter data and get one record
 ```
-$obj_catagory->filter(array("cat_id"=>null))->one();
+$obj_catagory->filter(array("catagory_id"=>null))->one();
 ```
 
 - Filter icontain, notIcontain, beginWith, notBeginWith, endWith, notEndWith
@@ -98,23 +98,114 @@ $obj_catagory->filter_or(array("id"=>[0,1], "name"=>"phone"))->all();
 
 - Limit query
 ```
-$obj_catagory->filter(array("cat_id"=>null))->limit(2)->all(); 
+$obj_catagory->filter(array("catagory_id"=>null))->limit(2)->all(); 
 ```
 
 - Order result
 ```
-$obj_catagory->filter(array("cat_id"=>null))->order_by(array("name"=>"asc", "id"=>"asc"))->all();
+$obj_catagory->filter(array("catagory_id"=>null))->order_by(array("name"=>"asc", "id"=>"asc"))->all();
 ```
 
-- Filter children_set
-- Filter connect_set
+- Filter children_set: select in table "catagory" where "catagory_id"= $catagory_id
+```
+$obj_catagory = new Catagory_model();
+$cat = $obj_catagory->filter(array("name"=>"car"))->one();
+if ($cat != null)
+{
+    $cats = $cat->children_set("catagory")->all();
+    foreach ($cats as $cat)
+    {
+        echo "<br>".$cat->name;
+    }
+}
+```
+
+- Filter connect_set: select in table "catagory" where "catagory_id"= $cat->catagory_id
+```
+$obj_catagory = new Catagory_model();
+$cat = $obj_catagory->filter(array("name"=>"car"))->one();
+if ($cat != null)
+{
+    $cats = $cat->connect_set("catagory")->all();
+    foreach ($cats as $cat)
+    {
+        echo "<br>".$cat->name." - catagory_id:".$cat->catagory_id;
+    }
+}
+```
+
 - get default value
+```
+$cats = $obj_catagory->filter(array("name"=>"car"))->all();
+foreach($cats as $cat)
+{
+    echo $cat->value();
+}
+```
+
 - Extra select
-- set
+
+- set() or save()
+```
+$obj_catagory->name = "car";
+$obj_catagory->save();
+```
+
 - update
+```
+$cat = $obj_catagory->filter(array("name"=>"car"))->one();
+if ($cat != null){
+    $cat->name = "my_car";
+    $cat->update();
+}
+```
+
+- update for connect table by id
+```
+$cat = $obj_catagory->filter(array("name"=>"car"))->one();
+if ($cat != null){
+    $cat->catagory_id = 1;
+    $cat->update();
+}
+```
+
+- update for connect table by object
+```
+$obj_catagory = new Catagory_model();
+$cat = $obj_catagory->filter(array("name"=>"car"))->one();
+if ($cat != null){
+    $obj_catagory = new Catagory_model();
+    $cat->catagory = $obj_catagory->filter(array("name"=>"my_car"))->one();
+    $cat->update();
+}
+```
+
 - delete
+```
+//delete one
+$cat = $obj_catagory->filter(array("name"=>"my_car"))->one();
+if ($cat != null)
+{
+    $cat->delete();
+}
+
+//delete all
+$cats = $obj_catagory->filter(array("name"=>"my_car"))->all();
+if (count($cats) > 0)
+{
+    foreach ($cats as $cat)
+    {
+        $cat->delete();
+    }
+}
+```
+
 - group_by
 - count_all_results
+```
+$num = $obj_catagory->filter(array("name"=>"car"))->count_all_results();
+```
+
 - get() = filter()
 
 

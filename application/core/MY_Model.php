@@ -46,11 +46,19 @@ class MY_Django_Model extends CI_Model{
         foreach($props as $prop)
         {
             $pub_nm = $prop->getName();
-            $pub_pro = $this->$pub_nm; // ex: $this->catagory
+            $pub_pro = $this->$pub_nm;
+            if (array_key_exists($pub_nm, $this->join_tables)) 
+            {
+                $connect_name = preg_replace('/_id$/','', $pub_nm);  //cat_id => cat
+                if (isset($this->$connect_name) and is_object($this->$connect_name))
+                {
+                    $pub_pro = $this->$connect_name; // ex: $this->catagory or $this->cat
+                }
+            }
+            
             if (is_object($pub_pro))
             {
-                $conn_field = $pub_nm."_id"; //ex: catagory->catagory_id
-                $this->db->set($conn_field, $pub_pro->id);
+                $this->db->set($pub_nm, $pub_pro->id);
             }else if ($pub_nm == "id" && ($pub_pro != null or !$save))
             {
                 $this->db->where('id',$pub_pro);
@@ -65,6 +73,7 @@ class MY_Django_Model extends CI_Model{
         }else
         {
             $this->db->insert($this->table);
+            $this->id = $this->db->insert_id();
         }
     }
     
@@ -288,6 +297,34 @@ class MY_Django_Model extends CI_Model{
     {
         $new_model = $connect_table."_model";
         $filter_value = null;
+        if (!is_null($this->conn_id))
+        {
+            $filter_value = $this->conn_id;
+        }
+
+        $new_model = $this->model_load_model($new_model);
+        $condition =[];
+        foreach ($new_model->get_join_tables() as $key=>$value)
+        {
+            if ($value == $this->table)
+            {
+                $condition[$key] = $filter_value;
+            }
+        }
+        if (sizeof($condition)== 1)
+        {
+            $result = $this->model_load_model($new_model)->filter($condition);
+        }else
+        {
+            $result = $this->model_load_model($new_model)->filter_or($condition);
+        }
+        return $result;
+    }
+
+    public function children_set($connect_table)
+    {
+        $new_model = $connect_table."_model";
+        $filter_value = null;
         if (!is_null($this->child_id))
         {
             $filter_value = $this->child_id;
@@ -311,6 +348,8 @@ class MY_Django_Model extends CI_Model{
         }
         return $result;
     }
+
+
 
     public function get($array_value = FALSE)
     {
