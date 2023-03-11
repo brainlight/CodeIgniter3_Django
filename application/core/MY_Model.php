@@ -1,5 +1,8 @@
 <?php defined('BASEPATH') OR exit('No direct script access allowed');
-    
+
+# author: hoanglongbkit@gmail.com
+# description: add some features of django filter to Codeignitor
+
 class MY_Model extends CI_Model{}
 
 class MY_Django_Model extends CI_Model{

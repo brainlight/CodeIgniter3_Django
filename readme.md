@@ -1,4 +1,8 @@
 ###################
+Author: hoanglongbkit@gmail.com
+Description: add some features of django filter to Codeignitor
+###################
+
 What is CodeIgniter & Django filter function
 ###################
 
