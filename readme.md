@@ -51,6 +51,7 @@ $all_data_tables[] ="catagory";
 ?>
 ```
 
+
 - 4. Modify in application> controllers> Welcome>index()
 ```
 $this->load->model('all_model');
@@ -59,6 +60,10 @@ $cats = $obj_catagory->filter(array("catagory_id"=>null))->all();
 foreach ($cats as $cat)
 {
     echo "<br>".$cat->name;
+    
+    // when set_join_tables => the field catagory_id has been removed => replace with object "catagory"
+    // can not access $cat->catagory_id
+    echo "<br>".$cat->catagory->id;  
 }
 ```
 

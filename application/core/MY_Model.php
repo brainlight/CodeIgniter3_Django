@@ -1,8 +1,5 @@
 <?php defined('BASEPATH') OR exit('No direct script access allowed');
-
-# author: hoanglongbkit@gmail.com
-# description: add some features of django filter to Codeignitor
-
+    
 class MY_Model extends CI_Model{}
 
 class MY_Django_Model extends CI_Model{
@@ -41,8 +38,39 @@ class MY_Django_Model extends CI_Model{
         return $mod;
     }
     
+    // public function update($save=false)
+    // {
+        // $is_update = false;
+        // $reflect = new ReflectionClass($this);
+        // $props = $reflect->getProperties(ReflectionProperty::IS_PUBLIC);
+        // foreach($props as $prop)
+        // {
+            // $pub_nm = $prop->getName();
+            // $pub_pro = $this->$pub_nm; // ex: $this->catagory
+            // if (is_object($pub_pro))
+            // {
+                // $conn_field = $pub_nm."_id"; //ex: catagory->catagory_id
+                // $this->db->set($conn_field, $pub_pro->id);
+            // }else if ($pub_nm == "id" && ($pub_pro != null or !$save))
+            // {
+                // $this->db->where('id',$pub_pro);
+                // $is_update = true;
+            // }else{
+                // $this->db->set($pub_nm, $pub_pro);
+            // }
+        // }
+        // if ($is_update)
+        // {
+            // $this->db->update($this->table);
+        // }else
+        // {
+            // $this->db->insert($this->table);
+        // }
+    // }
+    
     public function update($save=false)
     {
+        log_message('info', "update=> start");
         $is_update = false;
         $reflect = new ReflectionClass($this);
         $props = $reflect->getProperties(ReflectionProperty::IS_PUBLIC);
@@ -50,6 +78,9 @@ class MY_Django_Model extends CI_Model{
         {
             $pub_nm = $prop->getName();
             $pub_pro = $this->$pub_nm;
+            $value = $this->$pub_nm;
+            // log_message('info', "update=> pub_nm:".$pub_nm);
+            // log_message('info', "update=> pub_pro:".$pub_pro);
             if (array_key_exists($pub_nm, $this->join_tables)) 
             {
                 $connect_name = preg_replace('/_id$/','', $pub_nm);  //cat_id => cat
@@ -59,22 +90,34 @@ class MY_Django_Model extends CI_Model{
                 }
             }
             
+            // when database submit_polygon_id = null  => $submit_polygon->id = "" => can not update this id event set $submit_news->submit_polygon_id = 15
+            // fix by check if set $submit_news->submit_polygon_id = 15 => instead of set submit_polygon_id = $submit_polygon->id => directly set submit_polygon_id = 15
             if (is_object($pub_pro))
             {
-                $this->db->set($pub_nm, $pub_pro->id);
+                // log_message('info', "update=> is_object:true =>$pub_nm=>$pub_pro->id -- value = $value");
+                if ($value != null)
+                {
+                    $this->db->set($pub_nm, $value);
+                }else{
+                    $this->db->set($pub_nm, $pub_pro->id);
+                }
             }else if ($pub_nm == "id" && ($pub_pro != null or !$save))
             {
+                // log_message('info', "update=> is_object:false =>where");
                 $this->db->where('id',$pub_pro);
                 $is_update = true;
             }else{
+                // log_message('info', "update=> is_object:false =>set");
                 $this->db->set($pub_nm, $pub_pro);
             }
         }
         if ($is_update)
         {
+            // log_message('info', "update=> update");
             $this->db->update($this->table);
         }else
         {
+            // log_message('info', "update=> insert");
             $this->db->insert($this->table);
             $this->id = $this->db->insert_id();
         }
@@ -145,7 +188,7 @@ class MY_Django_Model extends CI_Model{
         return $this->join_tables;
     }
 
-    private function set_conn_id($value)
+    public function set_conn_id($value)
     {
         $this->conn_id = $value;
     }
@@ -155,7 +198,7 @@ class MY_Django_Model extends CI_Model{
         return $this->conn_id;
     }
 
-    private function set_child_id($value)
+    public function set_child_id($value)
     {
         $this->child_id = $value;
     }
@@ -251,7 +294,7 @@ class MY_Django_Model extends CI_Model{
         return $this;
     }
 
-    private function filter_like($key, $array_values, $advance_search, $and=true)
+    public function filter_like($key, $array_values, $advance_search, $and=true)
     {
         $cond = "";
         if ($advance_search =="icontain" || $advance_search =="notIcontain" )
@@ -351,8 +394,6 @@ class MY_Django_Model extends CI_Model{
         }
         return $result;
     }
-
-
 
     public function get($array_value = FALSE)
     {
