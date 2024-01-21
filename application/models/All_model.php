@@ -11,14 +11,14 @@
 
         public $id = null;
         public $name=null;
-        public $cat=null;
+        public $catagory_id=null;
 
         public function __construct()
         {
             parent::__construct();
             $this->set_table("catagory");
             $this->set_field_default("name");
-            $this->set_join_tables("catagory","cat_id");
+            $this->set_join_tables("catagory","catagory_id");
             $this->load->database();
         }
     }

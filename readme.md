@@ -112,6 +112,11 @@ $obj_catagory->filter(array("id"=>[0,1]))->all();
 $obj_catagory->filter_or(array("id"=>[0,1], "name"=>"phone"))->all();
 ```
 
+- Filter not equal
+```
+$obj_catagory->filter(array("id =!"=>1))->all();
+```
+
 - Limit query
 ```
 $obj_catagory->filter(array("catagory_id"=>null))->limit(2)->all(); 
